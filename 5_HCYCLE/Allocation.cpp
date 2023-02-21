@@ -100,7 +100,10 @@ void Allocation::load(const string& path, const string& filein){
 			ideg[i].first = xti[i];
 			ideg[i].second = 0;
 		}
-		for(int i = 0; i < edges.size();i++) ideg[itx[edges[i][0]]].second += 1;
+		for(int i = 0; i < edges.size();i++){
+			ideg[itx[edges[i][0]]].second += 1;
+			ideg[itx[edges[i][1]]].second += 1;
+		}
 		sort(ideg.begin(), ideg.end(), sortpair);
 		
 		for(int i =0; i < nbNodes; i++){

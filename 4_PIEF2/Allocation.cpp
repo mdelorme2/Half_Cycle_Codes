@@ -4,7 +4,7 @@
 	********************************** ALLOCATION ***************************************
 	************************************************************************************* */
 	
-bool sortpair(const pair<int,int>& p1, const pair<int,int>& p2){ return p1.second <  p2.second;}
+bool sortpair(const pair<int,int>& p1, const pair<int,int>& p2){ return p1.second >  p2.second;}
 
 void Allocation::load(const string& path, const string& filein){
 	// Local variables 

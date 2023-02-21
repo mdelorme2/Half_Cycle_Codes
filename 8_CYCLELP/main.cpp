@@ -86,6 +86,8 @@ int cycle(Allocation& allo, const int& K){
 		}
 	}		
 
+	allo.infos.nbVar = cycles.size();
+	allo.infos.nbCons = allo.nbNodes;
 	allo.infos.timeCPU.push_back(getCPUTime() - initTimeModelCPU);
 	
 	cout << cycles.size() << endl;
@@ -94,7 +96,7 @@ int cycle(Allocation& allo, const int& K){
 	// LP Model
 	try{
 		GRBEnv env = GRBemptyenv;
-		env.set(GRB_DoubleParam_MemLimit, 14);
+		env.set(GRB_DoubleParam_MemLimit, 16);
 		env.start();
 		
 		// Local variables
@@ -106,7 +108,6 @@ int cycle(Allocation& allo, const int& K){
 		// Initialization
 		for (int i = 0; i < cycles.size(); i++){
 			isCycleUsed[i] = model.addVar(0, 1, 0, GRB_CONTINUOUS);
-			allo.infos.nbVar++;
 		}
 
 		model.update();
@@ -122,7 +123,6 @@ int cycle(Allocation& allo, const int& K){
 		// Unique assignment for patients
 		for (int i = 0; i < allo.nbNodes; i++){
 			model.addConstr(isNodeUsed[i] <= 1);
-			allo.infos.nbCons++;
 		}
 				
 		// Objective function
@@ -175,7 +175,7 @@ int cycle(Allocation& allo, const int& K){
 		// Local variables
 		try{
 			GRBEnv env = GRBemptyenv;
-			env.set(GRB_DoubleParam_MemLimit, 14);
+			env.set(GRB_DoubleParam_MemLimit, 16);
 			env.start();
 			
 			GRBModel model = GRBModel(env);

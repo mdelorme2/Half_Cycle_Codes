@@ -100,7 +100,7 @@ int ander(Allocation& allo, const int& K){
 					if(j < K - 1) tails[j+1][allo.itx[allo.edges[k][1]]] = true;
 					if(ee[allo.itx[allo.edges[k][0]]][allo.itx[allo.edges[k][1]]] == false){
 						ee[allo.itx[allo.edges[k][0]]][allo.itx[allo.edges[k][1]]] = true;
-				//		cout << "ADD " << allo.xti[i] << " " << allo.edges[k][0] << " " << allo.edges[k][1] << " pos " << j << endl;
+						//cout << "ADD " << i << " " << allo.edges[k][0] << " " << allo.edges[k][1] << " pos " << j << endl;
 						anedges[i].push_back({allo.itx[allo.edges[k][0]],allo.itx[allo.edges[k][1]]});
 					}
 				}

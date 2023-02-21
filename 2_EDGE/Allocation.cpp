@@ -28,79 +28,109 @@ void Allocation::load(const string& path, const string& filein){
 	if (file){
 		// Name of the instance is filein
 		name = filein;
+		if(name.find(".json") != string::npos){
+			// 2 first lines are garbage
+			getline(file, parser); iss.str(parser); iss.clear(); 
+			getline(file, parser); iss.str(parser); iss.clear(); 
 
-		// 2 first lines are garbage
-		getline(file, parser); iss.str(parser); iss.clear(); 
-		getline(file, parser); iss.str(parser); iss.clear(); 
+			// For each donor
+			for(;;){
+				getline(file, parser); iss.str(parser);
+				do{
+					tempChar = iss.get();
+				}
+				while(tempChar != '}' && tempChar != '"');
 
-		// For each donor
-		for(;;){
-			getline(file, parser); iss.str(parser);
-			do{
-				tempChar = iss.get();
-			}
-			while(tempChar != '}' && tempChar != '"');
-
-			if(tempChar == '}'){
-				iss.clear();
-				break;
-			}
-			
-			getline(iss, tempString, '"');
-			tempIss.str(tempString);
-			tempIss >> tail;
-			itx[tail] = nbNodes;
-			xti.push_back(tail);
-			tempIss.clear(); 
-			iss.clear(); 
-			getline(file, parser); iss.str(parser); iss.clear(); 
-			getline(file, parser); iss.str(parser); iss.clear(); 
-			getline(file, parser); iss.str(parser); iss.clear(); 
-			getline(file, parser); iss.str(parser); iss.clear(); 
-			getline(file, parser); iss.str(parser); iss.clear(); 
-			
-			do{
-				tempChar = iss.get();
-			}
-			while(tempChar != '}' && tempChar != '"');
-			if(tempChar == '"'){	
+				if(tempChar == '}'){
+					iss.clear();
+					break;
+				}
+				
+				getline(iss, tempString, '"');
+				tempIss.str(tempString);
+				tempIss >> tail;
+				itx[tail] = nbNodes;
+				xti.push_back(tail);
+				tempIss.clear(); 
 				iss.clear(); 
-				for(;;){
-					getline(file, parser); iss.str(parser); 
-					do{
-						tempChar = iss.get();
-					}
-					while(tempChar != ']' && tempChar != '{');
-	//				cout << "tempChar is " << tempChar << endl;
-					if(tempChar == ']'){
-						iss.clear(); 
-						getline(file, parser); iss.str(parser);iss.clear(); 
-						break;
-					}
+				getline(file, parser); iss.str(parser); iss.clear(); 
+				getline(file, parser); iss.str(parser); iss.clear(); 
+				getline(file, parser); iss.str(parser); iss.clear(); 
+				getline(file, parser); iss.str(parser); iss.clear(); 
+				getline(file, parser); iss.str(parser); iss.clear(); 
+				
+				do{
+					tempChar = iss.get();
+				}
+				while(tempChar != '}' && tempChar != '"');
+				if(tempChar == '"'){	
 					iss.clear(); 
-					getline(file, parser); iss.str(parser);
+					for(;;){
+						getline(file, parser); iss.str(parser); 
+						do{
+							tempChar = iss.get();
+						}
+						while(tempChar != ']' && tempChar != '{');
+		//				cout << "tempChar is " << tempChar << endl;
+						if(tempChar == ']'){
+							iss.clear(); 
+							getline(file, parser); iss.str(parser);iss.clear(); 
+							break;
+						}
+						iss.clear(); 
+						getline(file, parser); iss.str(parser);
+						getline(iss, tempString, ',');
+						tempIss.str(tempString);
+						tempIss >> garbage;
+						tempIss >> head;
+						edges.push_back({tail,head});
+						tempIss.clear(); 
+						iss.clear(); 
+						getline(file, parser); iss.str(parser); iss.clear(); 
+						getline(file, parser); iss.str(parser); 
+					}
+				}
+				else iss.clear(); 
+				nbNodes++;
+			}
+		}	
+		if(name.find(".wmd") != string::npos){
+			int cnt = -11;
+			while(getline(file, parser)){
+				iss.str(parser); 
+				tempChar = iss.get();
+				if(tempChar == '#'){ 
+					if(cnt >= 0){
+						itx[cnt+1] = cnt;
+						xti.push_back(cnt+1);
+					}
+					iss.clear();
+					cnt++;
+				}
+				else{
+					getline(iss, tempString, ',');
+					tempIss.str(tempChar + tempString);
+					tempIss >> tail; tempIss.clear(); 
 					getline(iss, tempString, ',');
 					tempIss.str(tempString);
-					tempIss >> garbage;
-					tempIss >> head;
+					tempIss >> head; tempIss.clear(); 
 					edges.push_back({tail,head});
 					tempIss.clear(); 
-					iss.clear(); 
-					getline(file, parser); iss.str(parser); iss.clear(); 
-					getline(file, parser); iss.str(parser); 
+					iss.clear();
 				}
 			}
-			else iss.clear(); 
-			nbNodes++;
-		}	
-		
+			nbNodes = cnt;
+		}
 		// Pair index / degree
 		vector<pair<int,int> > ideg (nbNodes);
 		for(int i =0; i < nbNodes; i++){
 			ideg[i].first = xti[i];
 			ideg[i].second = 0;
 		}
-		for(int i = 0; i < edges.size();i++) ideg[itx[edges[i][0]]].second += 1;
+		for(int i = 0; i < edges.size();i++){
+			ideg[itx[edges[i][0]]].second += 1;
+			ideg[itx[edges[i][1]]].second += 1;
+		}
 		sort(ideg.begin(), ideg.end(), sortpair);
 		
 		for(int i =0; i < nbNodes; i++){
