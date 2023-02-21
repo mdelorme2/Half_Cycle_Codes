@@ -96,7 +96,7 @@ int cycle(Allocation& allo, const int& K){
 	// LP Model
 	try{
 		GRBEnv env = GRBemptyenv;
-		env.set(GRB_DoubleParam_MemLimit, 16);
+		env.set(GRB_DoubleParam_MemLimit, 30);
 		env.start();
 		
 		// Local variables
@@ -175,7 +175,7 @@ int cycle(Allocation& allo, const int& K){
 		// Local variables
 		try{
 			GRBEnv env = GRBemptyenv;
-			env.set(GRB_DoubleParam_MemLimit, 16);
+			env.set(GRB_DoubleParam_MemLimit, 30);
 			env.start();
 			
 			GRBModel model = GRBModel(env);

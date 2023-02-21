@@ -117,7 +117,7 @@ int hcycle(Allocation& allo, const int& K){
 	// Model
 	try{
 		GRBEnv env = GRBemptyenv;
-		env.set(GRB_DoubleParam_MemLimit, 14);
+		env.set(GRB_DoubleParam_MemLimit, 30);
 		env.start();
 		
 		// Local variables
@@ -176,6 +176,7 @@ int hcycle(Allocation& allo, const int& K){
 		model.getEnv().set(GRB_DoubleParam_TimeLimit,  3600);
 		model.getEnv().set(GRB_IntParam_Method, 2);
 		model.getEnv().set(GRB_IntParam_Crossover, 0); 
+		model.getEnv().set(GRB_IntParam_Presolve, 0); 
 		model.getEnv().set(GRB_IntParam_Threads, 1);
 		model.getEnv().set(GRB_DoubleParam_MIPGap, 0);
 		model.optimize();
@@ -211,7 +212,7 @@ int hcycle(Allocation& allo, const int& K){
 		// Local variables
 		try{
 			GRBEnv env = GRBemptyenv;
-			env.set(GRB_DoubleParam_MemLimit, 14);
+			env.set(GRB_DoubleParam_MemLimit, 30);
 			env.start();
 			
 			GRBModel model = GRBModel(env);

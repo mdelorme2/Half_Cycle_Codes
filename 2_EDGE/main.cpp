@@ -112,7 +112,7 @@ int edge(Allocation& allo, const int& K){
 	allo.infos.timeCPU.push_back(getCPUTime() - initTimeModelCPU);
 	
 	GRBEnv env = GRBemptyenv;
-	env.set(GRB_DoubleParam_MemLimit, 14);
+	env.set(GRB_DoubleParam_MemLimit, 30);
 	env.start();
 	
 	// Model
